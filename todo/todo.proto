@@ -1,0 +1,58 @@
+syntax="proto3";
+
+option go_package = "github.com/jamiebmurray25/grpc-crud/todo";
+
+package todo;
+
+service Todo {
+  rpc GetTodo (TodoRequest) returns (TodoReply) {}
+}
+
+
+message TodoRequest {
+  int32 id = 1;
+}
+
+message TodoReply {
+  string title = 1;
+}
+
+// add server reflection
+message DescriptorDatabaseRequest {
+  string host = 1;
+  oneof message_request {
+    string files_for_file_name = 3;
+    string files_for_symbol_name = 4;
+    FileContainingExtensionRequest file_containing_extension = 5;
+    string list_all_extensions_of_type = 6;
+  }
+}
+
+message FileContainingExtensionRequest {
+  string base_message = 1;
+  int64 extension_id = 2;
+}
+
+message DescriptorDatabaseResponse {
+  string valid_host = 1;
+  DescriptorDatabaseRequest original_request = 2;
+  oneof message_response {
+    // These are proto2 type google.protobuf.FileDescriptorProto, but
+    // we avoid taking a dependency on descriptor.proto, which uses
+    // proto2 only features, by making them opaque
+    // bytes instead
+    repeated bytes fd_proto = 4;
+    ListAllExtensionsResponse extensions_response = 5;
+    // Notably includes error code 5, NOT FOUND
+    int32 error_code = 6;
+  }
+}
+
+message ListAllExtensionsResponse {
+  string base_type_name;
+  repeated int64 extension_number;
+}
+
+service ProtoDescriptorDatabase {
+  rpc DescriptorDatabaseInfo(stream DescriptorDatabaseRequest) returns (stream DescriptorDatabaseResponse);
+}
