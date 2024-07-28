@@ -3,6 +3,7 @@ module github.com/jamiebmurray25/grpc-crud
 go 1.22.5
 
 require (
+	github.com/mattn/go-sqlite3 v1.14.22
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.1
 )
