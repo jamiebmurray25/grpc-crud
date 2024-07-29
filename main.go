@@ -2,9 +2,9 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net"
-  "fmt"
 
 	"github.com/jamiebmurray25/grpc-crud/database"
 	pb "github.com/jamiebmurray25/grpc-crud/protobuf"
@@ -14,13 +14,12 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-
 func setupDatabase() (*database.Queries, error) {
 	db, err := sql.Open("sqlite3", "todos.db")
 
-  if err != nil {
-    return nil, err
-  }
+	if err != nil {
+		return nil, err
+	}
 
 	queries := database.New(db)
 
