@@ -25,12 +25,39 @@ func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) (Todo, e
 	return i, err
 }
 
-const getTodo = `-- name: GetTodo :one
+const getAllTodos = `-- name: GetAllTodos :many
+SELECT id, title, createdat FROM todos
+`
+
+func (q *Queries) GetAllTodos(ctx context.Context) ([]Todo, error) {
+	rows, err := q.db.QueryContext(ctx, getAllTodos)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Todo
+	for rows.Next() {
+		var i Todo
+		if err := rows.Scan(&i.ID, &i.Title, &i.Createdat); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getTodoById = `-- name: GetTodoById :one
 SELECT id, title, createdat FROM todos WHERE id = ? LIMIT 1
 `
 
-func (q *Queries) GetTodo(ctx context.Context, id string) (Todo, error) {
-	row := q.db.QueryRowContext(ctx, getTodo, id)
+func (q *Queries) GetTodoById(ctx context.Context, id string) (Todo, error) {
+	row := q.db.QueryRowContext(ctx, getTodoById, id)
 	var i Todo
 	err := row.Scan(&i.ID, &i.Title, &i.Createdat)
 	return i, err

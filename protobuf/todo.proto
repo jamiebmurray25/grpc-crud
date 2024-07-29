@@ -7,12 +7,13 @@ package todo;
 import "google/protobuf/timestamp.proto";
 
 service Todo {
-  rpc GetTodo (GetTodoRequest) returns (TodoReply) {}
+  rpc GetAllTodos (Empty) returns (GetAllTodosReply) {}
+  rpc GetTodoById (GetTodoByIdRequest) returns (TodoReply) {}
   rpc CreateTodo (CreateTodoRequest) returns (TodoReply) {}
 }
 
 
-message GetTodoRequest {
+message GetTodoByIdRequest {
   string id = 1;
 }
 
@@ -25,3 +26,9 @@ message TodoReply {
   string title = 2;
   google.protobuf.Timestamp createdAt = 3;
 }
+
+message GetAllTodosReply {
+  repeated TodoReply todos = 1;
+}
+
+message Empty {}

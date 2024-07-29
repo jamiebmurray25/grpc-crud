@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jamiebmurray25/grpc-crud/database"
 	pb "github.com/jamiebmurray25/grpc-crud/protobuf"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type Server struct {
@@ -15,10 +16,28 @@ type Server struct {
 	Queries *database.Queries
 }
 
-func (s *Server) GetTodo(ctx context.Context, in *pb.GetTodoRequest) (*pb.TodoReply, error) {
+func (s *Server) GetAllTodos(ctx context.Context, in *pb.Empty) (*pb.GetAllTodosReply, error) {
+	todos, err := s.Queries.GetAllTodos(ctx)
+
+	if err != nil {
+		return nil, errors.New("Failed to fetch todos.")
+	}
+
+	var todoReplies []*pb.TodoReply
+	for _, todo := range todos {
+
+		todoReply := pb.TodoReply{Id: todo.ID, Title: todo.Title, CreatedAt: timestamppb.New(todo.Createdat.Time)}
+
+		todoReplies = append(todoReplies, &todoReply)
+	}
+
+	return &pb.GetAllTodosReply{Todos: todoReplies}, nil
+}
+
+func (s *Server) GetTodoById(ctx context.Context, in *pb.GetTodoByIdRequest) (*pb.TodoReply, error) {
 	log.Printf("Received: %v", in.GetId())
 
-	todo, err := s.Queries.GetTodo(ctx, in.GetId())
+	todo, err := s.Queries.GetTodoById(ctx, in.GetId())
 
 	log.Printf("%+v\n", todo)
 
@@ -34,15 +53,15 @@ func (s *Server) CreateTodo(ctx context.Context, in *pb.CreateTodoRequest) (*pb.
 	todoId, err := uuid.NewV7()
 
 	if err != nil {
-		return nil, err
+		return nil, errors.New("Failed to create todo uuid.")
 	}
 
-	log.Printf("Created todo with uuid: %s", todoId.String())
+	log.Printf("Creating todo with uuid: %s", todoId.String())
 
 	todo, err := s.Queries.CreateTodo(ctx, database.CreateTodoParams{ID: todoId.String(), Title: in.Title})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.New("Failed to create todo.")
 	}
 
 	return &pb.TodoReply{Id: todo.ID, Title: todo.Title}, nil
