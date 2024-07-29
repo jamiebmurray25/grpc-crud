@@ -4,7 +4,12 @@
 
 package database
 
+import (
+	"database/sql"
+)
+
 type Todo struct {
-	ID    string
-	Title string
+	ID        string
+	Title     string
+	Createdat sql.NullTime
 }

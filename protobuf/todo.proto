@@ -4,15 +4,24 @@ option go_package = "github.com/jamiebmurray25/grpc-crud/protobuf";
 
 package todo;
 
+import "google/protobuf/timestamp.proto";
+
 service Todo {
-  rpc GetTodo (TodoRequest) returns (TodoReply) {}
+  rpc GetTodo (GetTodoRequest) returns (TodoReply) {}
+  rpc CreateTodo (CreateTodoRequest) returns (TodoReply) {}
 }
 
 
-message TodoRequest {
+message GetTodoRequest {
   string id = 1;
 }
 
-message TodoReply {
+message CreateTodoRequest {
   string title = 1;
+}
+
+message TodoReply {
+  string id = 1;
+  string title = 2;
+  google.protobuf.Timestamp createdAt = 3;
 }

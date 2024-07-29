@@ -9,13 +9,29 @@ import (
 	"context"
 )
 
+const createTodo = `-- name: CreateTodo :one
+INSERT INTO todos (id, title) VALUES (?, ?) RETURNING id, title, createdat
+`
+
+type CreateTodoParams struct {
+	ID    string
+	Title string
+}
+
+func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) (Todo, error) {
+	row := q.db.QueryRowContext(ctx, createTodo, arg.ID, arg.Title)
+	var i Todo
+	err := row.Scan(&i.ID, &i.Title, &i.Createdat)
+	return i, err
+}
+
 const getTodo = `-- name: GetTodo :one
-SELECT id, title FROM todos WHERE id = ? LIMIT 1
+SELECT id, title, createdat FROM todos WHERE id = ? LIMIT 1
 `
 
 func (q *Queries) GetTodo(ctx context.Context, id string) (Todo, error) {
 	row := q.db.QueryRowContext(ctx, getTodo, id)
 	var i Todo
-	err := row.Scan(&i.ID, &i.Title)
+	err := row.Scan(&i.ID, &i.Title, &i.Createdat)
 	return i, err
 }
