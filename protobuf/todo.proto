@@ -1,0 +1,18 @@
+syntax="proto3";
+
+option go_package = "github.com/jamiebmurray25/grpc-crud/protobuf";
+
+package todo;
+
+service Todo {
+  rpc GetTodo (TodoRequest) returns (TodoReply) {}
+}
+
+
+message TodoRequest {
+  string id = 1;
+}
+
+message TodoReply {
+  string title = 1;
+}
