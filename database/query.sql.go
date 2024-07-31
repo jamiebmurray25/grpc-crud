@@ -25,6 +25,15 @@ func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) (Todo, e
 	return i, err
 }
 
+const deleteTodo = `-- name: DeleteTodo :exec
+DELETE FROM todos WHERE id = ?
+`
+
+func (q *Queries) DeleteTodo(ctx context.Context, id string) error {
+	_, err := q.db.ExecContext(ctx, deleteTodo, id)
+	return err
+}
+
 const getAllTodos = `-- name: GetAllTodos :many
 SELECT id, title, createdat FROM todos
 `
@@ -58,6 +67,22 @@ SELECT id, title, createdat FROM todos WHERE id = ? LIMIT 1
 
 func (q *Queries) GetTodoById(ctx context.Context, id string) (Todo, error) {
 	row := q.db.QueryRowContext(ctx, getTodoById, id)
+	var i Todo
+	err := row.Scan(&i.ID, &i.Title, &i.Createdat)
+	return i, err
+}
+
+const updateTodo = `-- name: UpdateTodo :one
+UPDATE todos SET title = ? WHERE id = ? RETURNING id, title, createdat
+`
+
+type UpdateTodoParams struct {
+	Title string
+	ID    string
+}
+
+func (q *Queries) UpdateTodo(ctx context.Context, arg UpdateTodoParams) (Todo, error) {
+	row := q.db.QueryRowContext(ctx, updateTodo, arg.Title, arg.ID)
 	var i Todo
 	err := row.Scan(&i.ID, &i.Title, &i.Createdat)
 	return i, err

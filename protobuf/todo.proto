@@ -10,8 +10,9 @@ service Todo {
   rpc GetAllTodos (Empty) returns (GetAllTodosReply) {}
   rpc GetTodoById (GetTodoByIdRequest) returns (TodoReply) {}
   rpc CreateTodo (CreateTodoRequest) returns (TodoReply) {}
+  rpc UpdateTodo (UpdateTodoRequest) returns (TodoReply) {}
+  rpc DeleteTodo (DeleteTodoRequest) returns (Empty) {}
 }
-
 
 message GetTodoByIdRequest {
   string id = 1;
@@ -19,6 +20,15 @@ message GetTodoByIdRequest {
 
 message CreateTodoRequest {
   string title = 1;
+}
+
+message UpdateTodoRequest {
+  string title = 1;
+  string id = 2;
+}
+
+message DeleteTodoRequest {
+  string id = 1;
 }
 
 message TodoReply {
