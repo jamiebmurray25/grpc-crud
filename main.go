@@ -24,7 +24,6 @@ func setupDatabase() (*database.Queries, error) {
 	queries := database.New(db)
 
 	return queries, nil
-
 }
 
 func main() {

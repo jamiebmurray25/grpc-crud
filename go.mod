@@ -6,10 +6,10 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.22
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.1
+	github.com/google/uuid v1.6.0
 )
 
 require (
-	github.com/google/uuid v1.6.0 // indirect
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
