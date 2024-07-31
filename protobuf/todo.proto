@@ -1,0 +1,44 @@
+syntax="proto3";
+
+option go_package = "github.com/jamiebmurray25/grpc-crud/protobuf";
+
+package todo;
+
+import "google/protobuf/timestamp.proto";
+
+service Todo {
+  rpc GetAllTodos (Empty) returns (GetAllTodosReply) {}
+  rpc GetTodoById (GetTodoByIdRequest) returns (TodoReply) {}
+  rpc CreateTodo (CreateTodoRequest) returns (TodoReply) {}
+  rpc UpdateTodo (UpdateTodoRequest) returns (TodoReply) {}
+  rpc DeleteTodo (DeleteTodoRequest) returns (Empty) {}
+}
+
+message GetTodoByIdRequest {
+  string id = 1;
+}
+
+message CreateTodoRequest {
+  string title = 1;
+}
+
+message UpdateTodoRequest {
+  string title = 1;
+  string id = 2;
+}
+
+message DeleteTodoRequest {
+  string id = 1;
+}
+
+message TodoReply {
+  string id = 1;
+  string title = 2;
+  google.protobuf.Timestamp createdAt = 3;
+}
+
+message GetAllTodosReply {
+  repeated TodoReply todos = 1;
+}
+
+message Empty {}
