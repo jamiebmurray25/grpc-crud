@@ -21,7 +21,11 @@
 go.work
 go.work.sum
 
+# binary
 grpc-crud
+
+# db
+todos.db
 
 # env file
 .env
