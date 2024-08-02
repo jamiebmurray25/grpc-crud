@@ -6,6 +6,7 @@ import (
 	"log"
 
 	pb "github.com/jamiebmurray25/grpc-crud/protobuf"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func (s *Server) GetTodoById(ctx context.Context, in *pb.GetTodoByIdRequest) (*pb.TodoReply, error) {
@@ -19,5 +20,5 @@ func (s *Server) GetTodoById(ctx context.Context, in *pb.GetTodoByIdRequest) (*p
 		return nil, errors.New("todo not found")
 	}
 
-	return &pb.TodoReply{Id: todo.ID, Title: todo.Title}, nil
+	return &pb.TodoReply{Id: todo.ID, Title: todo.Title, Completed: todo.Completed, CreatedAt: timestamppb.New(todo.Createdat)}, nil
 }

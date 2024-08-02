@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jamiebmurray25/grpc-crud/database"
 	pb "github.com/jamiebmurray25/grpc-crud/protobuf"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func (s *Server) CreateTodo(ctx context.Context, in *pb.CreateTodoRequest) (*pb.TodoReply, error) {
@@ -26,5 +27,5 @@ func (s *Server) CreateTodo(ctx context.Context, in *pb.CreateTodoRequest) (*pb.
 		return nil, errors.New("failed to create todo")
 	}
 
-	return &pb.TodoReply{Id: todo.ID, Title: todo.Title}, nil
+	return &pb.TodoReply{Id: todo.ID, Title: todo.Title, Completed: todo.Completed, CreatedAt: timestamppb.New(todo.Createdat)}, nil
 }

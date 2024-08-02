@@ -24,7 +24,8 @@ message CreateTodoRequest {
 
 message UpdateTodoRequest {
   string title = 1;
-  string id = 2;
+  bool completed = 2;
+  string id = 3;
 }
 
 message DeleteTodoRequest {
@@ -34,7 +35,8 @@ message DeleteTodoRequest {
 message TodoReply {
   string id = 1;
   string title = 2;
-  google.protobuf.Timestamp createdAt = 3;
+  bool completed = 3;
+  google.protobuf.Timestamp createdAt = 4;
 }
 
 message GetAllTodosReply {

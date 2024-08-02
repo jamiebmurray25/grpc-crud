@@ -18,8 +18,7 @@ func (s *Server) GetAllTodos(ctx context.Context, in *pb.Empty) (*pb.GetAllTodos
 	var todoReplies []*pb.TodoReply
 
 	for _, todo := range todos {
-
-		todoReply := pb.TodoReply{Id: todo.ID, Title: todo.Title, CreatedAt: timestamppb.New(todo.Createdat.Time)}
+		todoReply := pb.TodoReply{Id: todo.ID, Title: todo.Title, Completed: todo.Completed, CreatedAt: timestamppb.New(todo.Createdat)}
 
 		todoReplies = append(todoReplies, &todoReply)
 	}
