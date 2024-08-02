@@ -27,5 +27,8 @@ grpc-crud
 # db
 todos.db
 
+# idea
+.idea/
+
 # env file
 .env
