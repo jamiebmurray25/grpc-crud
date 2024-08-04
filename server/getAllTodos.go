@@ -3,12 +3,15 @@ package server
 import (
 	"context"
 	"errors"
+	"log"
 
 	pb "github.com/jamiebmurray25/grpc-crud/protobuf"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func (s *Server) GetAllTodos(ctx context.Context, in *pb.Empty) (*pb.GetAllTodosReply, error) {
+	log.Printf("GetAllTodos: Attempting to fetch all todos")
+
 	todos, err := s.Queries.GetAllTodos(ctx)
 
 	if err != nil {
@@ -22,6 +25,8 @@ func (s *Server) GetAllTodos(ctx context.Context, in *pb.Empty) (*pb.GetAllTodos
 
 		todoReplies = append(todoReplies, &todoReply)
 	}
+
+	log.Printf("GetAllTodos: Successfully fetched all todos")
 
 	return &pb.GetAllTodosReply{Todos: todoReplies}, nil
 }

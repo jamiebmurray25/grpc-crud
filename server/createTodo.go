@@ -13,19 +13,21 @@ import (
 
 func (s *Server) CreateTodo(ctx context.Context, in *pb.CreateTodoRequest) (*pb.TodoReply, error) {
 
+	log.Printf("CreateTodo: Attempting to create todo with values: {title: %s}", in.GetTitle())
+
 	todoId, err := uuid.NewV7()
 
 	if err != nil {
 		return nil, errors.New("failed to create todo uuid")
 	}
 
-	log.Printf("Creating todo with uuid: %s", todoId.String())
-
-	todo, err := s.Queries.CreateTodo(ctx, database.CreateTodoParams{ID: todoId.String(), Title: in.Title})
+	todo, err := s.Queries.CreateTodo(ctx, database.CreateTodoParams{ID: todoId.String(), Title: in.GetTitle()})
 
 	if err != nil {
 		return nil, errors.New("failed to create todo")
 	}
+
+	log.Printf("CreateTodo: Successfully created todo '%s'", todoId)
 
 	return &pb.TodoReply{Id: todo.ID, Title: todo.Title, Completed: todo.Completed, CreatedAt: timestamppb.New(todo.Createdat)}, nil
 }
